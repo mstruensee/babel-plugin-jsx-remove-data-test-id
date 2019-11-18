@@ -57,6 +57,14 @@ const runTests = (label, transform) => {
         expect(uglify(actual)).to.equal(uglify(expected));
       });
 
+      // it('ignore spread objects', () => {
+      //   const code = '<p someOtherAttribute={ ...{ fn: () => {} } }></p>';
+      //   const expectedCode = '<p></p>';
+      //   const actual = transform(code, { usePlugin: true });
+      //   const expected = transform(expectedCode);
+      //   expect(uglify(actual)).to.equal(uglify(expected));
+      // });
+
       it('removes data-test-id bools', () => {
         const code = '<p data-test-id={false}></p>';
         const expectedCode = '<p></p>';
@@ -137,19 +145,22 @@ runTests(
       plugins = [
         ["./src", { attributes }],
         ["transform-react-jsx", { pragma: "j" }],
-        ["transform-es2015-arrow-functions", {}]
+        ["transform-es2015-arrow-functions", {}],
+        ["transform-es2015-spread", {}],
       ];
     } else if (useValidAttributes) {
       plugins = [
         ["./src", { attributes: ["selenium-id", "useless-attr"] }],
         ["transform-react-jsx", { pragma: "j" }],
-        ["transform-es2015-arrow-functions", {}]
+        ["transform-es2015-arrow-functions", {}],
+        ["transform-es2015-spread", {}],
       ];
     } else {
       plugins = [
         usePlugin && "./src",
         ["transform-react-jsx", { pragma: "j" }],
-        ["transform-es2015-arrow-functions", {}]
+        ["transform-es2015-arrow-functions", {}],
+        ["transform-es2015-spread", {}],
       ].filter(Boolean);
     }
     return babel6.transform(code, { plugins }).code;
@@ -171,19 +182,22 @@ runTests(
       plugins = [
         ['./src', { attributes }],
         ["@babel/transform-react-jsx", { pragma: "j" }],
-        ["@babel/transform-arrow-functions", {}]
+        ["@babel/transform-arrow-functions", {}],
+        "@babel/plugin-proposal-object-rest-spread"
       ]
     } else if (useValidAttributes) {
       plugins = [
         ['./src', { attributes: ['selenium-id', 'useless-attr'] }],
         ["@babel/transform-react-jsx", { pragma: "j" }],
-        ["@babel/transform-arrow-functions", {}]
+        ["@babel/transform-arrow-functions", {}],
+        "@babel/plugin-proposal-object-rest-spread"
       ]
     } else {
       plugins = [
         usePlugin && "./src",
         ["@babel/transform-react-jsx", { pragma: "j" }],
-        ["@babel/transform-arrow-functions", {}]
+        ["@babel/transform-arrow-functions", {}],
+        "@babel/plugin-proposal-object-rest-spread"
       ].filter(Boolean)
     }
     return babel7.transformSync(code, { plugins }).code;
